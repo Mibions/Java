@@ -1,0 +1,123 @@
+CREATE TABLE Thong_Tin_Nguoi_Dung (--
+    MA_NGUOI_DUNG VARCHAR(10) PRIMARY KEY,
+    TEN_NGUOI_DUNG NVARCHAR(100) NOT NULL,
+    GIOI_TINH NVARCHAR(3),
+    NGAY_SINH DATE,
+    CCCD VARCHAR(12),
+    DIA_CHI NVARCHAR(100),
+    SDT VARCHAR(10),
+    MA_TAI_KHOAN NVARCHAR(100) UNIQUE
+);
+-------------------------------------------------------------------------------------------
+CREATE TABLE Tai_Khoan_Dang_Nhap (--
+    TEN_DANG_NHAP NVARCHAR(100) PRIMARY KEY,
+    MAT_KHAU NVARCHAR(12) NOT NULL,
+    VAI_TRO INT DEFAULT 0,
+    MA_NGUOI_DUNG VARCHAR(10) NOT NULL,
+    UNIQUE (MA_NGUOI_DUNG),
+    FOREIGN KEY (MA_NGUOI_DUNG) REFERENCES Thong_Tin_Nguoi_Dung(MA_NGUOI_DUNG)
+);
+-------------------------------------------------------------------------------------------
+CREATE TABLE Khach_Hang
+(
+	MA_KHACH_HANG VARCHAR(10) PRIMARY KEY,
+	TEN_KHACH_HANG NVARCHAR(40),
+	GIOI_TINH NVARCHAR(3),
+	NGAY_SINH DATE,
+	SO_LAN_MUA_HANG INT DEFAULT 0
+)
+-------------------------------------------------------------------------------------------
+CREATE TABLE Ban (
+    MA_BAN INT PRIMARY KEY,
+    TINH_TRANG_BAN NVARCHAR(100) NOT NULL,
+    DANG_CO_KHACH BIT NOT NULL DEFAULT 0 -- Cột để chỉ ra liệu bàn có khách đang ngồi hay không
+);
+------------------------------------------------------------------------------------------
+CREATE TABLE Dat_Ban (
+    MA_DAT_BAN INT PRIMARY KEY,
+    MA_BAN INT,
+    NGAY_DAT DATE,
+    MA_KHACH_HANG VARCHAR(10),
+    TINH_TRANG NVARCHAR(50),
+    FOREIGN KEY (MA_BAN) REFERENCES Ban(MA_BAN),
+    FOREIGN KEY (MA_KHACH_HANG) REFERENCES Khach_Hang(MA_KHACH_HANG)
+);
+-------------------------------------------------------------------------------------------
+CREATE TABLE Kho_Nguyen_Lieu
+(
+    MA_NGUYEN_LIEU INT PRIMARY KEY,
+    TEN_NGUYEN_LIEU NVARCHAR(100) NOT NULL,
+    DON_VI_TINH NVARCHAR(20)
+);
+-------------------------------------------------------------------------------------------
+CREATE TABLE Giao_Dich_Kho
+(
+    MA_GIAO_DICH INT PRIMARY KEY,
+    NGAY_GIO DATETIME,
+    MA_NGUOI_DUNG VARCHAR(10),
+    LOAI_GIAO_DICH NVARCHAR(50),
+    FOREIGN KEY (MA_NGUOI_DUNG) REFERENCES Thong_Tin_Nguoi_Dung(MA_NGUOI_DUNG)
+);
+-------------------------------------------------------------------------------------------
+CREATE TABLE Chi_Tiet_Giao_Dich_Kho
+(
+    MA_GIAO_DICH INT,
+    MA_NGUYEN_LIEU INT,
+    SO_LUONG INT,
+    PRIMARY KEY (MA_GIAO_DICH, MA_NGUYEN_LIEU),
+    FOREIGN KEY (MA_GIAO_DICH) REFERENCES Giao_Dich_Kho(MA_GIAO_DICH),
+    FOREIGN KEY (MA_NGUYEN_LIEU) REFERENCES Kho_Nguyen_Lieu(MA_NGUYEN_LIEU)
+);
+-------------------------------------------------------------------------------------------
+CREATE TABLE Loai_Thuc_Don (
+    MA_LOAI_THUC_DON INT PRIMARY KEY,
+    TEN_LOAI_THUC_DON NVARCHAR(30)
+);
+-------------------------------------------------------------------------------------------
+CREATE TABLE Thuc_Don (
+    MA_MON INT PRIMARY KEY,
+    TEN_MON NVARCHAR(50),
+    THANH_PHAN NVARCHAR(MAX),
+    GIA INT,
+    HINH_ANH VARCHAR(100),
+    MA_LOAI_THUC_DON INT, 
+    FOREIGN KEY (MA_LOAI_THUC_DON) REFERENCES Loai_Thuc_Don(MA_LOAI_THUC_DON)
+);
+-------------------------------------------------------------------------------------------
+CREATE TABLE Chi_Tiet_Dat_Ban (
+    MA_DAT_BAN INT,
+    MA_BAN INT,
+    MA_MON INT,
+    CONSTRAINT PK_Chi_Tiet_Dat_Ban PRIMARY KEY (MA_DAT_BAN, MA_BAN, MA_MON),
+    CONSTRAINT FK_Chi_Tiet_Dat_Ban_DatBan FOREIGN KEY (MA_DAT_BAN) REFERENCES Dat_Ban(MA_DAT_BAN),
+    CONSTRAINT FK_Chi_Tiet_Dat_Ban_Ban FOREIGN KEY (MA_BAN) REFERENCES Ban(MA_BAN),
+    CONSTRAINT FK_Chi_Tiet_Dat_Ban_ThucDon FOREIGN KEY (MA_MON) REFERENCES Thuc_Don(MA_MON)
+);
+--------------------------------------------------------------------------------------------
+CREATE TABLE Don_Dat_Hang (
+    MA_DAT_HANG INT PRIMARY KEY,
+    MA_DAT_BAN INT,
+    MA_MON INT,
+    FOREIGN KEY (MA_DAT_BAN) REFERENCES Dat_Ban(MA_DAT_BAN),
+    FOREIGN KEY (MA_MON) REFERENCES Thuc_Don(MA_MON)
+);
+--------------------------------------------------------------------------------------------
+CREATE TABLE Hoa_Don (
+    MA_HOA_DON INT PRIMARY KEY,
+    MA_KHACH_HANG VARCHAR(10) NOT NULL,
+    NGUOI_PHU_TRACH VARCHAR(10) NOT NULL,
+    MA_BAN INT,
+    FOREIGN KEY (MA_KHACH_HANG) REFERENCES Khach_Hang(MA_KHACH_HANG),
+    FOREIGN KEY (NGUOI_PHU_TRACH) REFERENCES Thong_Tin_Nguoi_Dung(MA_NGUOI_DUNG),
+    FOREIGN KEY (MA_BAN) REFERENCES Ban(MA_BAN)
+);
+--------------------------------------------------------------------------------------------
+CREATE TABLE Chi_Tiet_Hoa_Don
+(
+	MA_HOA_DON INT NOT NULL,
+	MA_MON INT NOT NULL,
+	COUNT INT NOT NULL DEFAULT 0,
+	PRIMARY KEY (MA_HOA_DON, MA_MON),
+	FOREIGN KEY (MA_HOA_DON) REFERENCES Hoa_Don(MA_HOA_DON),
+	FOREIGN KEY (MA_MON) REFERENCES Thuc_Don(MA_MON)
+)

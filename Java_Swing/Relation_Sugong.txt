@@ -1,0 +1,13 @@
+Quan hệ một-một (One-to-One):
+	+ Bảng Thong_Tin_Nguoi_Dung và Tai_Khoan_Dang_Nhap: Mỗi người dùng có một tài khoản đăng nhập duy nhất và 	ngược lại, mỗi tài khoản đăng nhập chỉ thuộc về một người dùng duy nhất.
+Quan hệ một-nhiều (One-to-Many):
+	+ Bảng Khach_Hang và Dat_Ban: Một khách hàng có thể có nhiều đơn đặt bàn.
+	+ Bảng Ban và Dat_Ban: Một bàn có thể có nhiều đơn đặt bàn.
+	+ Bảng Thuc_Don và Chi_Tiet_Dat_Ban: Một món trong thực đơn có thể được đặt trong nhiều đơn đặt bàn.
+	+ Bảng Dat_Ban và Chi_Tiet_Dat_Ban: Một đơn đặt bàn có thể bao gồm nhiều chi tiết đặt bàn.
+	+ Bảng Dat_Ban và Hoa_Don: Một đơn đặt bàn có thể tạo ra một hoá đơn.
+	+ Bảng Thuc_Don và Chi_Tiet_Hoa_Don: Một món trong thực đơn có thể xuất hiện trong nhiều chi tiết hoá đơn.
+	+ Bảng Hoa_Don và Chi_Tiet_Hoa_Don: Một hoá đơn có thể có nhiều chi tiết hoá đơn.
+Quan hệ nhiều-nhiều (Many-to-Many):
+	+ Bảng Kho_Nguyen_Lieu và Giao_Dich_Kho thông qua bảng trung gian Chi_Tiet_Giao_Dich_Kho: Một giao dịch kho 	có thể liên quan đến nhiều nguyên liệu trong kho và mỗi nguyên liệu có thể được sử dụng trong nhiều giao dịch 	kho.
+	+ Bảng Thuc_Don và Dat_Ban thông qua bảng trung gian Don_Dat_Hang: Một đơn đặt hàng có thể bao gồm nhiều món 	và mỗi món có thể được đặt hàng trong nhiều đơn đặt hàng khác nhau.
